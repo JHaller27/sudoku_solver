@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku", "Sudoku.csproj", "{98EE82E5-5CF1-4815-9403-8F341839CDAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98EE82E5-5CF1-4815-9403-8F341839CDAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98EE82E5-5CF1-4815-9403-8F341839CDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98EE82E5-5CF1-4815-9403-8F341839CDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98EE82E5-5CF1-4815-9403-8F341839CDAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
