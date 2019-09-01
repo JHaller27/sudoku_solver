@@ -248,6 +248,9 @@ namespace Sudoku
             Console.Write("File name> ");
             var filePath = Console.ReadLine();
 
+            MoveToEnd();
+            Console.Write("                               ");
+
             if (filePath != null)
             {
                 _lines = System.IO.File.ReadAllLines(filePath);
