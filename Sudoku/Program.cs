@@ -42,7 +42,7 @@ namespace Sudoku
                 new BoxInvalidateRule()
             };
 
-            IView view = new ConsoleView();
+            IView view = new ConsoleViewFileInput();
 
             var board = new Board(rules);
             view.Display(board);

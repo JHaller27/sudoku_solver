@@ -175,7 +175,7 @@ namespace Sudoku
             Console.ResetColor();
         }
 
-        private static void MoveToEnd()
+        protected static void MoveToEnd()
         {
             Console.SetCursorPosition(0, 37);
         }
@@ -191,7 +191,7 @@ namespace Sudoku
             }
         }
 
-        public UserSetData GetNextSetData()
+        public virtual UserSetData GetNextSetData()
         {
             MoveToEnd();
             Console.Write("       ");
@@ -229,6 +229,53 @@ namespace Sudoku
         {
             MoveToEnd();
             Console.Write("Ending program");
+        }
+    }
+
+    public class ConsoleViewFileInput : ConsoleView
+    {
+        private readonly string[] _lines;
+        private int _mark;
+
+        public ConsoleViewFileInput()
+        {
+            MoveToEnd();
+            Console.Write("File name> ");
+            var filePath = Console.ReadLine();
+
+            if (filePath != null)
+            {
+                _lines = System.IO.File.ReadAllLines(filePath);
+            }
+
+            _mark = 0;
+        }
+        public override UserSetData GetNextSetData()
+        {
+            if (_mark >= _lines.Length)
+            {
+                return new UserSetData {valid = false};
+            }
+
+            var input = _lines[_mark++];
+            var values = input.Split();
+
+            if (values.Length < 3)
+            {
+                return new UserSetData {valid = false};
+            }
+
+            var row = int.Parse(values[0]) - 1;
+            var col = int.Parse(values[1]) - 1;
+            var val = int.Parse(values[2]) - 1;
+
+            return new UserSetData
+            {
+                valid = true,
+                row = row,
+                col = col,
+                value = val
+            };
         }
     }
 }
