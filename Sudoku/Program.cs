@@ -9,7 +9,7 @@ namespace Sudoku
             private readonly Random _random;
             private int _nextValue;
 
-            public MockBoard() : base()
+            public MockBoard() : base(null)
             {
                 _random = new Random();
                 _nextValue = 9;
@@ -35,7 +35,15 @@ namespace Sudoku
 
         static void Main(string[] args)
         {
-            Board board = new MockBoard();
+            var rules = new Rule[]
+            {
+                new RowInvalidateRule(),
+                new ColumnInvalidateRule(),
+                new BoxInvalidateRule()
+            };
+
+            var board = new Board(rules);
+
             IView view = new ConsoleView();
             view.Display(board);
         }

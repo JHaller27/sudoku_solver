@@ -7,20 +7,21 @@ namespace Sudoku
     {
         private const int NoValue = -1;
 
-        private int _value;
         private readonly bool[] _valid;
         private int _validCount;
 
-        public Cell(int value)
+        public int Value { get; private set; }
+
+        private Cell(int value)
         {
-            this._value = value;
+            this.Value = value;
             _valid = new bool [9];
 
-            if (this._value == NoValue)
+            if (this.Value == NoValue)
             {
                 for (var i = 0; i < _valid.Length; i++)
                 {
-                    _valid[0] = true;
+                    _valid[i] = true;
                 }
 
                 _validCount = 9;
@@ -32,7 +33,7 @@ namespace Sudoku
                     _valid[0] = false;
                 }
 
-                _valid[this._value] = true;
+                _valid[this.Value] = true;
                 _validCount = 1;
             }
         }
@@ -54,7 +55,7 @@ namespace Sudoku
                     break;
                 }
 
-                this._value = validValue;
+                this.Value = validValue;
             }
             else if (_validCount < 1)
             {
@@ -64,7 +65,7 @@ namespace Sudoku
 
         public void SetValue(int value)
         {
-            this._value = value;
+            this.Value = value;
             _validCount = 1;
 
             for (var i = 0; i < 9; i++)
@@ -72,31 +73,45 @@ namespace Sudoku
                 _valid[i] = false;
             }
 
-            _valid[this._value] = true;
+            _valid[this.Value] = true;
         }
 
-        public bool IsValid(int value) => _valid[value];
+        public bool IsValid(int value)
+        {
+            return _valid[value];
+        }
 
-        public bool HasValue() => _value != NoValue;
-
-        public int Value => _value;
+        public bool HasValue() => Value != NoValue;
     }
 
     public class Board
     {
+        private readonly IEnumerable<Rule> _rules;
         private readonly Cell[,] _cells;
 
-        public Board(Cell[,] cells)
+        public Board(IEnumerable<Rule> rules, Cell[,] cells)
         {
+            _rules = rules;
             _cells = cells;
         }
 
-        public Board() : this(new Cell[9, 9]) {}
+        public Board(IEnumerable<Rule> rules)
+        {
+            var maxSize = 9;
+            _cells = new Cell[9, 9];
+            for (var r = 0; r < maxSize; r++)
+            {
+                for (var c = 0; c < maxSize; c++)
+                {
+                    _cells[r, c] = new Cell();
+                }
+            }
+        }
 
-        public virtual void SetValue(int row, int col, int value, IEnumerable<Rule> rules)
+        public virtual void SetValue(int row, int col, int value)
         {
             _cells[row, col].SetValue(value);
-            foreach (var rule in rules)
+            foreach (var rule in _rules)
             {
                 rule.Execute(row, col, value, this);
             }
