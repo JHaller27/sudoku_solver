@@ -180,26 +180,8 @@ namespace Sudoku
             Console.SetCursorPosition(0, 37);
         }
 
-        public void Display(Board board)
+        protected static UserSetData ParseLine(string input)
         {
-            for (var r = 0; r < 9; r++)
-            {
-                for (var c = 0; c < 9; c++)
-                {
-                    DisplayCell(board, r, c);
-                }
-            }
-        }
-
-        public virtual UserSetData GetNextSetData()
-        {
-            MoveToEnd();
-            Console.Write("       ");
-
-            MoveToEnd();
-            Console.Write("> ");
-            var input = Console.ReadLine();
-
             if (input == null)
             {
                 return new UserSetData{ valid = false };
@@ -223,6 +205,29 @@ namespace Sudoku
                 col = col,
                 value = val
             };
+        }
+
+        public void Display(Board board)
+        {
+            for (var r = 0; r < 9; r++)
+            {
+                for (var c = 0; c < 9; c++)
+                {
+                    DisplayCell(board, r, c);
+                }
+            }
+        }
+
+        public virtual UserSetData GetNextSetData()
+        {
+            MoveToEnd();
+            Console.Write("       ");
+
+            MoveToEnd();
+            Console.Write("> ");
+            var line = Console.ReadLine();
+
+            return ParseLine(line);
         }
 
         public void End()
@@ -254,28 +259,11 @@ namespace Sudoku
         {
             if (_mark >= _lines.Length)
             {
-                return new UserSetData {valid = false};
+                return ParseLine(null);
             }
 
-            var input = _lines[_mark++];
-            var values = input.Split();
-
-            if (values.Length < 3)
-            {
-                return new UserSetData {valid = false};
-            }
-
-            var row = int.Parse(values[0]) - 1;
-            var col = int.Parse(values[1]) - 1;
-            var val = int.Parse(values[2]) - 1;
-
-            return new UserSetData
-            {
-                valid = true,
-                row = row,
-                col = col,
-                value = val
-            };
+            var line = _lines[_mark++];
+            return ParseLine(line);
         }
     }
 }
