@@ -47,14 +47,15 @@ namespace Sudoku
             var board = new Board(rules);
             view.Display(board);
 
-            // Testing
-            for (var i = 0; i < 7; i++)
+            var data = view.GetNextSetData();
+            while (data.valid)
             {
-                board.SetValue(0, i, i);
+                board.SetValue(data.row, data.col, data.value);
                 view.Display(board);
+                data = view.GetNextSetData();
             }
-            board.SetValue(8, 8, 8);
-            view.Display(board);
+
+            view.End();
         }
     }
 }

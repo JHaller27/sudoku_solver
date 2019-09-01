@@ -2,9 +2,21 @@ using System;
 
 namespace Sudoku
 {
+    public struct UserSetData
+    {
+        public bool valid;
+        public int row;
+        public int col;
+        public int value;
+    }
+
     public interface IView
     {
         void Display(Board board);
+
+        UserSetData GetNextSetData();
+
+        void End();
     }
 
     public class ConsoleView : IView
@@ -21,7 +33,7 @@ namespace Sudoku
 
         public ConsoleView()
         {
-            Console.SetWindowSize(73, 37);
+            Console.SetWindowSize(73, 38);
             DisplayEmptyBoard();
         }
 
@@ -136,7 +148,7 @@ namespace Sudoku
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.Write(targetValue);
+                        Console.Write(targetValue + 1);
                         Console.ResetColor();
                     }
                 }
@@ -155,12 +167,17 @@ namespace Sudoku
             Console.Write("┌───┐");
 
             Console.SetCursorPosition(startCol, startRow + 1);
-            Console.Write($"│ {value} │");
+            Console.Write($"│ {value + 1} │");
 
             Console.SetCursorPosition(startCol, startRow + 2);
             Console.Write("└───┘");
 
             Console.ResetColor();
+        }
+
+        private static void MoveToEnd()
+        {
+            Console.SetCursorPosition(0, 37);
         }
 
         public void Display(Board board)
@@ -172,10 +189,46 @@ namespace Sudoku
                     DisplayCell(board, r, c);
                 }
             }
+        }
 
-            Console.SetCursorPosition(0, 37);
-            Console.Write("Press any key to exit...");
-            // Console.ReadKey();
+        public UserSetData GetNextSetData()
+        {
+            MoveToEnd();
+            Console.Write("       ");
+
+            MoveToEnd();
+            Console.Write("> ");
+            var input = Console.ReadLine();
+
+            if (input == null)
+            {
+                return new UserSetData{ valid = false };
+            }
+
+            var values = input.Split();
+
+            if (values.Length < 3)
+            {
+                return new UserSetData {valid = false};
+            }
+
+            var row = int.Parse(values[0]) - 1;
+            var col = int.Parse(values[1]) - 1;
+            var val = int.Parse(values[2]) - 1;
+            
+            return new UserSetData
+            {
+                valid = true,
+                row = row,
+                col = col,
+                value = val
+            };
+        }
+
+        public void End()
+        {
+            MoveToEnd();
+            Console.Write("Ending program");
         }
     }
 }
