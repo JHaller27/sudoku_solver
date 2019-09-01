@@ -42,9 +42,18 @@ namespace Sudoku
                 new BoxInvalidateRule()
             };
 
-            var board = new Board(rules);
-
             IView view = new ConsoleView();
+
+            var board = new Board(rules);
+            view.Display(board);
+
+            // Testing
+            for (var i = 0; i < 7; i++)
+            {
+                board.SetValue(0, i, i);
+                view.Display(board);
+            }
+            board.SetValue(8, 8, 8);
             view.Display(board);
         }
     }

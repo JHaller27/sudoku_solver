@@ -40,8 +40,13 @@ namespace Sudoku
 
         public Cell() : this(NoValue) {}
 
-        public void MarkInvalid(int value)
+        /*
+         * Return new value if changed, -1 otherwise
+         */
+        public int MarkInvalid(int value)
         {
+            if (!_valid[value] || HasValue()) return -1;
+
             _valid[value] = false;
             _validCount--;
 
@@ -56,11 +61,15 @@ namespace Sudoku
                 }
 
                 this.Value = validValue;
+
+                return Value;
             }
             else if (_validCount < 1)
             {
                 throw new Exception("No more valid values for this cell");
             }
+
+            return -1;
         }
 
         public void SetValue(int value)
@@ -106,20 +115,29 @@ namespace Sudoku
                     _cells[r, c] = new Cell();
                 }
             }
+
+            _rules = rules;
         }
 
-        public virtual void SetValue(int row, int col, int value)
+        private void ExecuteRules(int row, int col, int value)
         {
-            _cells[row, col].SetValue(value);
             foreach (var rule in _rules)
             {
                 rule.Execute(row, col, value, this);
             }
         }
 
+        public virtual void SetValue(int row, int col, int value)
+        {
+            _cells[row, col].SetValue(value);
+            ExecuteRules(row, col, value);
+        }
+
         public virtual void MarkInvalid(int row, int col, int value)
         {
-            _cells[row, col].MarkInvalid(value);
+            var valueChanged = _cells[row, col].MarkInvalid(value);
+            if (valueChanged != -1)
+                ExecuteRules(row, col, valueChanged);
         }
 
         public virtual bool IsValid(int row, int col, int value)

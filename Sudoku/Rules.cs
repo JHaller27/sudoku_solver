@@ -16,12 +16,12 @@ namespace Sudoku
 
     public class ColumnInvalidateRule : Rule
     {
-        public ColumnInvalidateRule() : base() { }
-
         public override void Execute(int row, int col, int value, Board board)
         {
             for (var r = 0; r < 9; r++)
             {
+                if (r == row) continue;
+
                 board.MarkInvalid(r, col, value);
             }
         }
@@ -29,12 +29,12 @@ namespace Sudoku
 
     public class RowInvalidateRule : Rule
     {
-        public RowInvalidateRule() : base() { }
-
         public override void Execute(int row, int col, int value, Board board)
         {
             for (var c = 0; c < 9; c++)
             {
+                if (c == col) continue;
+
                 board.MarkInvalid(row, c, value);
             }
         }
@@ -42,8 +42,6 @@ namespace Sudoku
 
     public class BoxInvalidateRule : Rule
     {
-        public BoxInvalidateRule() : base() { }
-
         public override void Execute(int row, int col, int value, Board board)
         {
             // Determine top-left coords of box
@@ -54,7 +52,12 @@ namespace Sudoku
             {
                 for (var colOff = 0; colOff < 3; colOff++)
                 {
-                    board.MarkInvalid(startRow + rowOff, startCol + colOff, value);
+                    var r = startRow + rowOff;
+                    var c = startCol + colOff;
+
+                    if (r == row && c == col) continue;
+
+                    board.MarkInvalid(r, c, value);
                 }
             }
         }

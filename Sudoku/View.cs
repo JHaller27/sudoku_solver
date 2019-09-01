@@ -17,6 +17,8 @@ namespace Sudoku
         private const string HorizontalBlockDivider = "═";
         private const string BlockIntersection = "╬";
 
+        private const string InvalidValue = " ";
+
         public ConsoleView()
         {
             Console.SetWindowSize(73, 37);
@@ -80,6 +82,7 @@ namespace Sudoku
 
         private static void DisplayEmptyBoard()
         {
+            Console.Clear();
             Console.SetWindowPosition(0, 0);
 
             for (var r = 0; r < 9; r++)
@@ -126,19 +129,37 @@ namespace Sudoku
 
                     var targetValue = rOff * 3 + cOff;
 
-                    if (!board.IsValid(row, col, targetValue)) continue;
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.Write(targetValue);
-                    Console.ResetColor();
+                    if (!board.IsValid(row, col, targetValue))
+                    {
+                        Console.Write(InvalidValue);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.Write(targetValue);
+                        Console.ResetColor();
+                    }
                 }
             }  
         }
 
         private static void DisplayCellWithValue(Board board, int row, int col)
         {
-            Console.SetCursorPosition(8 * col + 4, 4 * row + 2);
+            var startRow = 4 * row + 1;
+            var startCol = 8 * col + 2;
+            var value = board.GetValue(row, col);
+
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(board.GetValue(row, col));
+
+            Console.SetCursorPosition(startCol, startRow);
+            Console.Write("┌───┐");
+
+            Console.SetCursorPosition(startCol, startRow + 1);
+            Console.Write($"│ {value} │");
+
+            Console.SetCursorPosition(startCol, startRow + 2);
+            Console.Write("└───┘");
+
             Console.ResetColor();
         }
 
