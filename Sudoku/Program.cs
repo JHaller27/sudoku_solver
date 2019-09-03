@@ -39,10 +39,12 @@ namespace Sudoku
             {
                 new RowInvalidateRule(),
                 new ColumnInvalidateRule(),
-                new BoxInvalidateRule()
+                new BoxInvalidateRule(),
+                new DiagonalsInvalidateRule()
             };
 
             IView view = new ConsoleViewFileInput();
+//            IView view = new ConsoleView();
 
             var board = new Board(rules);
             view.Display(board);

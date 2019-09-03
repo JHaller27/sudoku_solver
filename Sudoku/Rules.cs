@@ -62,4 +62,29 @@ namespace Sudoku
             }
         }
     }
+
+    public class DiagonalsInvalidateRule : Rule
+    {
+        public override void Execute(int row, int col, int value, Board board)
+        {
+            // Ignore rule if not on diagonal
+            if (row != col && row != 8 - col) return;
+
+            // Top-left to bottom-right
+            for (var i = 0; i < 9; i++)
+            {
+                if (i == row) continue;
+
+                board.MarkInvalid(i, i, value);
+            }
+
+            // Top-right to bottom-left
+            for (var i = 0; i < 9; i++)
+            {
+                if (i == row) continue;
+
+                board.MarkInvalid(i, 8 - i, value);
+            }
+        }
+    }
 }
